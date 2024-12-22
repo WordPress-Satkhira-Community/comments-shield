@@ -2,7 +2,7 @@
 Author URI: https://www.wpsatkhira.com
 Plugin URI: https://wordpress.org/plugins/comments-shield/
 Donate link: 
-Contributors: wpdelower, monarchwp23
+Contributors: wpdelower, monarchwp23, zakir021063008
 Tags: disable comments, comments shield, wordpress security
 Requires at least: 6.1
 Tested up to: 6.7
