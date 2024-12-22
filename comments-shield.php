@@ -10,8 +10,7 @@
  * Author URI: https://wpsatkhira.com
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * text-domain: comments-shield
- * Domain Path: /languages 
+ * Text Domain: comments-shield
  */
 
 
