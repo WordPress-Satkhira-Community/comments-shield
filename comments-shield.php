@@ -43,7 +43,10 @@ add_action('admin_menu', 'cmsh_add_admin_menu');
 
 // Initialize settings
 function cmsh_settings_init() {
-	register_setting('commentShield', 'comments_shield_settings');
+	register_setting('commentShield', 'comments_shield_settings', [
+		'type' => 'array', 
+		'sanitize_callback' => 'cmsh_sanitize_array'
+	]);
 
 	add_settings_section(
 		'comments_shield_commentShield_section',
@@ -93,6 +96,11 @@ function cmsh_settings_init() {
 	);
 }
 add_action('admin_init', 'cmsh_settings_init');
+
+// Sanitize the array before saving
+function cmsh_sanitize_array( $input ) {
+	return is_array($input) ? array_map('sanitize_text_field', $input) : [];
+}
 
 // Render functions for each setting field
 function cmsh_disable_comments_support_render() {
