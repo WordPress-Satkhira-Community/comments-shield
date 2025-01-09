@@ -16,21 +16,15 @@
 
 // Avoiding Direct File Access
 
-if ( ! defined( 'ABSPATH' ) ) exit;
-
-// Load Plugin Text Domain
-
-function cmsh_load_textdomain() {
-	load_plugin_textdomain( 'comments-shield', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' ); 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
-add_action( 'plugins_loaded', 'cmsh_load_textdomain' );
-
 
 // Define constants
 define('COMMENTS_SHIELD_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
 // Register activation hook to initialize options
-function comments_shield_activate() {
+function cmsh_activate() {
 	add_option('comments_shield_settings', [
 		'disable_comments_support' => 1,
 		'close_comments' => 1,
@@ -39,29 +33,29 @@ function comments_shield_activate() {
 		'remove_dashboard_widget' => 1,
 	]);
 }
-register_activation_hook(__FILE__, 'comments_shield_activate');
+register_activation_hook(__FILE__, 'cmsh_activate');
 
 // Add settings page to the admin menu
-function comments_shield_add_admin_menu() {
-	add_options_page('Comments Shield Settings', 'Comments Shield', 'manage_options', 'comments-shield', 'comments_shield_options_page');
+function cmsh_add_admin_menu() {
+	add_options_page('Comments Shield Settings', 'Comments Shield', 'manage_options', 'comments-shield', 'cmsh_options_page');
 }
-add_action('admin_menu', 'comments_shield_add_admin_menu');
+add_action('admin_menu', 'cmsh_add_admin_menu');
 
 // Initialize settings
-function comments_shield_settings_init() {
+function cmsh_settings_init() {
 	register_setting('commentShield', 'comments_shield_settings');
 
 	add_settings_section(
 		'comments_shield_commentShield_section',
 		__('Manage Comments Settings', 'comments-shield'),
-		'comments_shield_settings_section_callback',
+		'cmsh_settings_section_callback',
 		'commentShield'
 	);
 
 	add_settings_field(
 		'disable_comments_support',
 		__('Disable Comments Support', 'comments-shield'),
-		'comments_shield_disable_comments_support_render',
+		'cmsh_disable_comments_support_render',
 		'commentShield',
 		'comments_shield_commentShield_section'
 	);
@@ -98,10 +92,10 @@ function comments_shield_settings_init() {
 		'comments_shield_commentShield_section'
 	);
 }
-add_action('admin_init', 'comments_shield_settings_init');
+add_action('admin_init', 'cmsh_settings_init');
 
 // Render functions for each setting field
-function comments_shield_disable_comments_support_render() {
+function cmsh_disable_comments_support_render() {
 	$options = get_option('comments_shield_settings');
 ?>
 <input type='checkbox' name='comments_shield_settings[disable_comments_support]' <?php checked(isset($options['disable_comments_support']), 1); ?> value='1'>
@@ -137,12 +131,12 @@ function comments_shield_remove_dashboard_widget_render() {
 }
 
 // Section callback function
-function comments_shield_settings_section_callback() {
+function cmsh_settings_section_callback() {
 	echo esc_html__('Select options to manage comments on your site.', 'comments-shield');
 }
 
 // Options page HTML
-function comments_shield_options_page() {
+function cmsh_options_page() {
 ?>
 <form action='options.php' method='post'>
 	<h2><?php echo esc_html__('Comments Shield', 'comments-shield'); ?></h2>
@@ -159,7 +153,7 @@ function comments_shield_options_page() {
 $options = get_option('comments_shield_settings');
 
 if (!empty($options['disable_comments_support'])) {
-	function comments_shield_disable_comments_post_types_support() {
+	function cmsh_disable_comments_post_types_support() {
 		$post_types = get_post_types();
 		foreach ($post_types as $post_type) {
 			if (post_type_supports($post_type, 'comments')) {
@@ -168,52 +162,52 @@ if (!empty($options['disable_comments_support'])) {
 			}
 		}
 	}
-	add_action('admin_init', 'comments_shield_disable_comments_post_types_support');
+	add_action('admin_init', 'cmsh_disable_comments_post_types_support');
 }
 
 if (!empty($options['close_comments'])) {
-	function comments_shield_disable_comments_status() {
+	function cmsh_disable_comments_status() {
 		return false;
 	}
-	add_filter('comments_open', 'comments_shield_disable_comments_status', 20, 2);
-	add_filter('pings_open', 'comments_shield_disable_comments_status', 20, 2);
+	add_filter('comments_open', 'cmsh_disable_comments_status', 20, 2);
+	add_filter('pings_open', 'cmsh_disable_comments_status', 20, 2);
 }
 
 if (!empty($options['hide_existing_comments'])) {
-	function comments_shield_disable_comments_hide_existing_comments($comments) {
+	function cmsh_disable_comments_hide_existing_comments($comments) {
 		return array();
 	}
-	add_filter('comments_array', 'comments_shield_disable_comments_hide_existing_comments', 10, 2);
+	add_filter('comments_array', 'cmsh_disable_comments_hide_existing_comments', 10, 2);
 }
 
 if (!empty($options['remove_comments_menu'])) {
-	function comments_shield_disable_comments_admin_menu() {
+	function cmsh_disable_comments_admin_menu() {
 		remove_menu_page('edit-comments.php');
 	}
-	add_action('admin_menu', 'comments_shield_disable_comments_admin_menu');
+	add_action('admin_menu', 'cmsh_disable_comments_admin_menu');
 
-	function comments_shield_disable_comments_admin_menu_redirect() {
+	function cmsh_disable_comments_admin_menu_redirect() {
 		global $pagenow;
 		if ($pagenow === 'edit-comments.php') {
 			wp_redirect(admin_url());
 			exit;
 		}
 	}
-	add_action('admin_init', 'comments_shield_disable_comments_admin_menu_redirect');
+	add_action('admin_init', 'cmsh_disable_comments_admin_menu_redirect');
 
-	function comments_shield_disable_comments_admin_bar() {
+	function cmsh_disable_comments_admin_bar() {
 		if (is_admin_bar_showing()) {
 			remove_action('admin_bar_menu', 'wp_admin_bar_comments_menu', 60);
 		}
 	}
-	add_action('init', 'comments_shield_disable_comments_admin_bar');
+	add_action('init', 'cmsh_disable_comments_admin_bar');
 }
 
 if (!empty($options['remove_dashboard_widget'])) {
-	function comments_shield_disable_comments_dashboard() {
+	function cmsh_disable_comments_dashboard() {
 		remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
 	}
-	add_action('admin_init', 'comments_shield_disable_comments_dashboard');
+	add_action('admin_init', 'cmsh_disable_comments_dashboard');
 }
 
 
