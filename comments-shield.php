@@ -63,7 +63,7 @@ function cmsh_settings_init() {
 	add_settings_field(
 		'close_comments',
 		__('Close Comments on Frontend', 'comments-shield'),
-		'comments_shield_close_comments_render',
+		'cmsh_close_comments_render',
 		'commentShield',
 		'comments_shield_commentShield_section'
 	);
@@ -71,7 +71,7 @@ function cmsh_settings_init() {
 	add_settings_field(
 		'hide_existing_comments',
 		__('Hide Existing Comments', 'comments-shield'),
-		'comments_shield_hide_existing_comments_render',
+		'cmsh_hide_existing_comments_render',
 		'commentShield',
 		'comments_shield_commentShield_section'
 	);
@@ -79,7 +79,7 @@ function cmsh_settings_init() {
 	add_settings_field(
 		'remove_comments_menu',
 		__('Remove Comments Menu', 'comments-shield'),
-		'comments_shield_remove_comments_menu_render',
+		'cmsh_remove_comments_menu_render',
 		'commentShield',
 		'comments_shield_commentShield_section'
 	);
@@ -87,7 +87,7 @@ function cmsh_settings_init() {
 	add_settings_field(
 		'remove_dashboard_widget',
 		__('Remove Dashboard Widget', 'comments-shield'),
-		'comments_shield_remove_dashboard_widget_render',
+		'cmsh_remove_dashboard_widget_render',
 		'commentShield',
 		'comments_shield_commentShield_section'
 	);
@@ -102,28 +102,28 @@ function cmsh_disable_comments_support_render() {
 <?php
 }
 
-function comments_shield_close_comments_render() {
+function cmsh_close_comments_render() {
 	$options = get_option('comments_shield_settings');
 ?>
 <input type='checkbox' name='comments_shield_settings[close_comments]' <?php checked(isset($options['close_comments']), 1); ?> value='1'>
 <?php
 }
 
-function comments_shield_hide_existing_comments_render() {
+function cmsh_hide_existing_comments_render() {
 	$options = get_option('comments_shield_settings');
 ?>
 <input type='checkbox' name='comments_shield_settings[hide_existing_comments]' <?php checked(isset($options['hide_existing_comments']), 1); ?> value='1'>
 <?php
 }
 
-function comments_shield_remove_comments_menu_render() {
+function cmsh_remove_comments_menu_render() {
 	$options = get_option('comments_shield_settings');
 ?>
 <input type='checkbox' name='comments_shield_settings[remove_comments_menu]' <?php checked(isset($options['remove_comments_menu']), 1); ?> value='1'>
 <?php
 }
 
-function comments_shield_remove_dashboard_widget_render() {
+function cmsh_remove_dashboard_widget_render() {
 	$options = get_option('comments_shield_settings');
 ?>
 <input type='checkbox' name='comments_shield_settings[remove_dashboard_widget]' <?php checked(isset($options['remove_dashboard_widget']), 1); ?> value='1'>
