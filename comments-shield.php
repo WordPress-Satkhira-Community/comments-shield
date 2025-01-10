@@ -21,16 +21,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define constants
-define('COMMENTS_SHIELD_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('cmsh_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
 // Register activation hook to initialize options
 function cmsh_activate() {
-	add_option('comments_shield_settings', [
-		'disable_comments_support' => 1,
-		'close_comments' => 1,
-		'hide_existing_comments' => 1,
-		'remove_comments_menu' => 1,
-		'remove_dashboard_widget' => 1,
+	add_option('cmsh_settings', [
+		'cmsh_disable_comments_support' => 1,
+		'cmsh_close_comments' => 1,
+		'cmsh_hide_existing_comments' => 1,
+		'cmsh_remove_comments_menu' => 1,
+		'cmsh_remove_dashboard_widget' => 1,
 	]);
 }
 register_activation_hook(__FILE__, 'cmsh_activate');
@@ -43,7 +43,7 @@ add_action('admin_menu', 'cmsh_add_admin_menu');
 
 // Initialize settings
 function cmsh_settings_init() {
-	register_setting('commentShield', 'comments_shield_settings', [
+	register_setting('commentShield', 'cmsh_settings', [
 		'type' => 'array', 
 		'sanitize_callback' => 'cmsh_sanitize_array'
 	]);
@@ -56,41 +56,41 @@ function cmsh_settings_init() {
 	);
 
 	add_settings_field(
-		'disable_comments_support',
+		'cmsh_disable_comments_support',
 		__('Disable Comments Support', 'comments-shield'),
-		'cmsh_disable_comments_support_render',
+		'cmsh_cmsh_disable_comments_support_render',
 		'commentShield',
 		'comments_shield_commentShield_section'
 	);
 
 	add_settings_field(
-		'close_comments',
+		'cmsh_close_comments',
 		__('Close Comments on Frontend', 'comments-shield'),
-		'cmsh_close_comments_render',
+		'cmsh_cmsh_close_comments_render',
 		'commentShield',
 		'comments_shield_commentShield_section'
 	);
 
 	add_settings_field(
-		'hide_existing_comments',
+		'cmsh_hide_existing_comments',
 		__('Hide Existing Comments', 'comments-shield'),
-		'cmsh_hide_existing_comments_render',
+		'cmsh_cmsh_hide_existing_comments_render',
 		'commentShield',
 		'comments_shield_commentShield_section'
 	);
 
 	add_settings_field(
-		'remove_comments_menu',
+		'cmsh_remove_comments_menu',
 		__('Remove Comments Menu', 'comments-shield'),
-		'cmsh_remove_comments_menu_render',
+		'cmsh_cmsh_remove_comments_menu_render',
 		'commentShield',
 		'comments_shield_commentShield_section'
 	);
 
 	add_settings_field(
-		'remove_dashboard_widget',
+		'cmsh_remove_dashboard_widget',
 		__('Remove Dashboard Widget', 'comments-shield'),
-		'cmsh_remove_dashboard_widget_render',
+		'cmsh_cmsh_remove_dashboard_widget_render',
 		'commentShield',
 		'comments_shield_commentShield_section'
 	);
@@ -103,38 +103,38 @@ function cmsh_sanitize_array( $input ) {
 }
 
 // Render functions for each setting field
-function cmsh_disable_comments_support_render() {
-	$options = get_option('comments_shield_settings');
+function cmsh_cmsh_disable_comments_support_render() {
+	$options = get_option('cmsh_settings');
 ?>
-<input type='checkbox' name='comments_shield_settings[disable_comments_support]' <?php checked(isset($options['disable_comments_support']), 1); ?> value='1'>
+<input type='checkbox' name='cmsh_settings[cmsh_disable_comments_support]' <?php checked(isset($options['cmsh_disable_comments_support']), 1); ?> value='1'>
 <?php
 }
 
-function cmsh_close_comments_render() {
-	$options = get_option('comments_shield_settings');
+function cmsh_cmsh_close_comments_render() {
+	$options = get_option('cmsh_settings');
 ?>
-<input type='checkbox' name='comments_shield_settings[close_comments]' <?php checked(isset($options['close_comments']), 1); ?> value='1'>
+<input type='checkbox' name='cmsh_settings[cmsh_close_comments]' <?php checked(isset($options['cmsh_close_comments']), 1); ?> value='1'>
 <?php
 }
 
-function cmsh_hide_existing_comments_render() {
-	$options = get_option('comments_shield_settings');
+function cmsh_cmsh_hide_existing_comments_render() {
+	$options = get_option('cmsh_settings');
 ?>
-<input type='checkbox' name='comments_shield_settings[hide_existing_comments]' <?php checked(isset($options['hide_existing_comments']), 1); ?> value='1'>
+<input type='checkbox' name='cmsh_settings[cmsh_hide_existing_comments]' <?php checked(isset($options['cmsh_hide_existing_comments']), 1); ?> value='1'>
 <?php
 }
 
-function cmsh_remove_comments_menu_render() {
-	$options = get_option('comments_shield_settings');
+function cmsh_cmsh_remove_comments_menu_render() {
+	$options = get_option('cmsh_settings');
 ?>
-<input type='checkbox' name='comments_shield_settings[remove_comments_menu]' <?php checked(isset($options['remove_comments_menu']), 1); ?> value='1'>
+<input type='checkbox' name='cmsh_settings[cmsh_remove_comments_menu]' <?php checked(isset($options['cmsh_remove_comments_menu']), 1); ?> value='1'>
 <?php
 }
 
-function cmsh_remove_dashboard_widget_render() {
-	$options = get_option('comments_shield_settings');
+function cmsh_cmsh_remove_dashboard_widget_render() {
+	$options = get_option('cmsh_settings');
 ?>
-<input type='checkbox' name='comments_shield_settings[remove_dashboard_widget]' <?php checked(isset($options['remove_dashboard_widget']), 1); ?> value='1'>
+<input type='checkbox' name='cmsh_settings[cmsh_remove_dashboard_widget]' <?php checked(isset($options['cmsh_remove_dashboard_widget']), 1); ?> value='1'>
 <?php
 }
 
@@ -158,9 +158,9 @@ function cmsh_options_page() {
 }
 
 // Implement logic based on settings
-$options = get_option('comments_shield_settings');
+$options = get_option('cmsh_settings');
 
-if (!empty($options['disable_comments_support'])) {
+if (!empty($options['cmsh_disable_comments_support'])) {
 	function cmsh_disable_comments_post_types_support() {
 		$post_types = get_post_types();
 		foreach ($post_types as $post_type) {
@@ -173,7 +173,7 @@ if (!empty($options['disable_comments_support'])) {
 	add_action('admin_init', 'cmsh_disable_comments_post_types_support');
 }
 
-if (!empty($options['close_comments'])) {
+if (!empty($options['cmsh_close_comments'])) {
 	function cmsh_disable_comments_status() {
 		return false;
 	}
@@ -181,14 +181,14 @@ if (!empty($options['close_comments'])) {
 	add_filter('pings_open', 'cmsh_disable_comments_status', 20, 2);
 }
 
-if (!empty($options['hide_existing_comments'])) {
-	function cmsh_disable_comments_hide_existing_comments($comments) {
+if (!empty($options['cmsh_hide_existing_comments'])) {
+	function cmsh_disable_comments_cmsh_hide_existing_comments($comments) {
 		return array();
 	}
-	add_filter('comments_array', 'cmsh_disable_comments_hide_existing_comments', 10, 2);
+	add_filter('comments_array', 'cmsh_disable_comments_cmsh_hide_existing_comments', 10, 2);
 }
 
-if (!empty($options['remove_comments_menu'])) {
+if (!empty($options['cmsh_remove_comments_menu'])) {
 	function cmsh_disable_comments_admin_menu() {
 		remove_menu_page('edit-comments.php');
 	}
@@ -211,7 +211,7 @@ if (!empty($options['remove_comments_menu'])) {
 	add_action('init', 'cmsh_disable_comments_admin_bar');
 }
 
-if (!empty($options['remove_dashboard_widget'])) {
+if (!empty($options['cmsh_remove_dashboard_widget'])) {
 	function cmsh_disable_comments_dashboard() {
 		remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
 	}
