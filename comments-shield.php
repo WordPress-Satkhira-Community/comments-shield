@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Comments Shield
- * Plugin URI: https://wpsatkhira.com/plugins/comments-shield
+ * Plugin URI: https://wordpress.org/plugins/comments-shield/
  * Description: A plugin to protect your WordPress site from spam comments.
  * Version: 1.0.1
  * Requires at least: 6.1
