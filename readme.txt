@@ -88,6 +88,7 @@ The plugin is actively maintained and updated regularly to ensure compatibility 
 = 1.0.1 (January 14,2025) =
 * Bug Fix
 * Security Update
+* Plugin Compatibility fixed
 
 = 1.0 (January 10,2025) =
 * Initial Release
@@ -97,6 +98,7 @@ The plugin is actively maintained and updated regularly to ensure compatibility 
 = 1.0.1 (January 14,2025) =
 * Bug Fix
 * Security Update
+* Plugin Compatibility fixed
 
 = 1.0 (January 10,2025) =
 * Initial Release
