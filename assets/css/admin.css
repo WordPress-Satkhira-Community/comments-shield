@@ -1,0 +1,35 @@
+/* Basic field wrapper to keep spacing consistent with WordPress forms */
+.cmsh-field { padding: 4px 0; }
+
+/* Toggle switch */
+.cmsh-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 26px;
+  vertical-align: middle;
+}
+.cmsh-switch input { display: none; }
+.cmsh-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #c3c4c7; /* WP gray */
+  transition: .25s;
+  border-radius: 999px;
+}
+.cmsh-slider:before {
+  content: "";
+  position: absolute;
+  height: 22px; width: 22px;
+  left: 2px; top: 2px;
+  background-color: #fff;
+  transition: .25s;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0,0,0,.15);
+}
+.cmsh-switch input:checked + .cmsh-slider { background-color: #2271b1; }
+.cmsh-switch input:checked + .cmsh-slider:before { transform: translateX(26px); }
+
+/* High contrast focus */
+.cmsh-switch input:focus + .cmsh-slider { box-shadow: 0 0 0 3px rgba(34,113,177,.35); }

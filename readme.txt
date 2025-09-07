@@ -4,8 +4,8 @@ Plugin URI: https://wordpress.org/plugins/comments-shield/
 Donate link: https://www.wpsatkhira.com/donate 
 Contributors: wpdelower, monarchwp23, zakir021063008,wpsatkhira
 Tags: disable comments, comments shield, remove comments, comments, spam comments
-Tested up to: 6.7
-Stable tag: 1.0.1
+Tested up to: 6.8
+Stable tag: 1.2
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,6 +15,9 @@ This plugin provides an easy way to manage and disable comments on your WordPres
 == Description ==
 
 Comments Shield is a powerful yet user-friendly WordPress plugin designed to give website administrators complete control over the commenting functionality of their WordPress site. While comments can be useful for engagement, they can also pose security risks and lead to spam if not properly managed. This plugin simplifies the process of managing comments, enhancing your site's security and performance with ease.
+
+### Video Tutorial
+[youtube https://youtu.be/L36Z7n_dk1w]
 
 == Key Features: ==
 
@@ -85,6 +88,13 @@ The plugin is actively maintained and updated regularly to ensure compatibility 
 
 == Changelog ==
 
+= 1.2 (Aug 17,2025) =
+* Bug Fix
+* Security Update
+* Plugin Compatibility fixed
+* Redesigned checkboxes
+* New Interface added
+
 = 1.0.1 (January 14,2025) =
 * Bug Fix
 * Security Update
@@ -94,6 +104,13 @@ The plugin is actively maintained and updated regularly to ensure compatibility 
 * Initial Release
 
 == Upgrade Notice ==
+
+= 1.2 (Aug 17,2025) =
+* Bug Fix
+* Security Update
+* Plugin Compatibility fixed
+* Redesigned checkboxes
+* New Interface added
 
 = 1.0.1 (January 14,2025) =
 * Bug Fix
