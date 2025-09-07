@@ -62,4 +62,41 @@ class CMSH_Core {
 	public function remove_dashboard_widget(): void {
 		remove_meta_box( 'dashboard_recent_comments', 'dashboard', 'normal' );
 	}
+
+	/**
+	 * Delete all comments from the database
+	 *
+	 * @return array Response with status and message
+	 */
+	public function delete_all_comments(): array {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return array(
+				'success' => false,
+				'message' => __( 'You do not have permission to perform this action.', 'comments-shield' )
+			);
+		}
+
+		global $wpdb;
+		
+		// Delete all comments
+		$comments_deleted = $wpdb->query( "TRUNCATE TABLE {$wpdb->comments}" );
+		$meta_deleted = $wpdb->query( "TRUNCATE TABLE {$wpdb->commentmeta}" );
+		
+		if ( $comments_deleted !== false && $meta_deleted !== false ) {
+			// Update comment count for all posts
+			$wpdb->query( "UPDATE {$wpdb->posts} SET comment_count = 0" );
+			
+			wp_cache_flush();
+			
+			return array(
+				'success' => true,
+				'message' => __( 'All comments have been deleted successfully.', 'comments-shield' )
+			);
+		}
+		
+		return array(
+			'success' => false,
+			'message' => __( 'An error occurred while deleting comments.', 'comments-shield' )
+		);
+	}
 }

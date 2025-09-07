@@ -16,6 +16,7 @@ class CMSH_Admin {
 
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'settings_init' ) );
+		add_action( 'admin_init', array( $this, 'handle_delete_comments' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( CMSH_FILE ), array( $this, 'add_action_links' ) );
 	}
@@ -93,6 +94,15 @@ class CMSH_Admin {
 				submit_button();
 				?>
 			</form>
+
+			<div class="cmsh-delete-comments-section">
+				<h2><?php echo esc_html__( 'Delete All Comments', 'comments-shield' ); ?></h2>
+				<p class="description"><?php echo esc_html__( 'This action will permanently delete all comments from your WordPress site. This cannot be undone.', 'comments-shield' ); ?></p>
+				<form method="post" onsubmit="return confirm('<?php echo esc_js( __( 'Are you sure you want to delete all comments? This action cannot be undone.', 'comments-shield' ) ); ?>');">
+					<?php wp_nonce_field( 'cmsh_delete_comments' ); ?>
+					<input type="submit" name="cmsh_delete_comments" class="button button-danger" value="<?php echo esc_attr__( 'Delete All Comments', 'comments-shield' ); ?>" />
+				</form>
+			</div>
 		</div>
 		<?php
 	}
@@ -100,5 +110,53 @@ class CMSH_Admin {
 	public function add_action_links( array $actions ): array {
 		$actions[] = '<a href="' . esc_url( admin_url( 'options-general.php?page=comments-shield' ) ) . '">' . esc_html__( 'Settings', 'comments-shield' ) . '</a>';
 		return $actions;
+	}
+
+	/**
+	 * Handle the delete comments form submission
+	 */
+	public function handle_delete_comments(): void {
+		if ( ! isset( $_POST['cmsh_delete_comments'] ) || ! isset( $_POST['_wpnonce'] ) ) {
+			return;
+		}
+
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'cmsh_delete_comments' ) ) {
+			add_settings_error(
+				'comments-shield',
+				'cmsh_nonce_error',
+				__( 'Security check failed.', 'comments-shield' ),
+				'error'
+			);
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			add_settings_error(
+				'comments-shield',
+				'cmsh_permission_error',
+				__( 'You do not have permission to perform this action.', 'comments-shield' ),
+				'error'
+			);
+			return;
+		}
+
+		$core = new CMSH_Core();
+		$result = $core->delete_all_comments();
+
+		if ( $result['success'] ) {
+			add_settings_error(
+				'comments-shield',
+				'cmsh_delete_success',
+				$result['message'],
+				'success'
+			);
+		} else {
+			add_settings_error(
+				'comments-shield',
+				'cmsh_delete_error',
+				$result['message'],
+				'error'
+			);
+		}
 	}
 }

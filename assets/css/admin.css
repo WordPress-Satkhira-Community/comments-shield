@@ -33,3 +33,29 @@
 
 /* High contrast focus */
 .cmsh-switch input:focus + .cmsh-slider { box-shadow: 0 0 0 3px rgba(34,113,177,.35); }
+
+/* Delete comments section */
+.cmsh-delete-comments-section {
+  margin-top: 30px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  box-shadow: 0 1px 1px rgba(0,0,0,.04);
+  border-radius: 4px;
+}
+
+.cmsh-delete-comments-section h2 {
+  margin-top: 0;
+}
+
+.button-danger {
+  background: #dc3232 !important;
+  border-color: #dc3232 !important;
+  color: #fff !important;
+}
+
+.button-danger:hover,
+.button-danger:focus {
+  background: #c92626 !important;
+  border-color: #c92626 !important;
+}
