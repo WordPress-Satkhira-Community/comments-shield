@@ -76,9 +76,26 @@ class CMSH_Admin {
 	}
 
 	public function render_delete_page(): void {
+		$total_comments = wp_count_comments();
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html__( 'Delete Comments', 'comments-shield' ); ?></h1>
+			
+			<div class="cmsh-stats-grid">
+				<div class="cmsh-stat-box">
+					<span class="cmsh-stat-number"><?php echo esc_html( number_format_i18n( $total_comments->total_comments ) ); ?></span>
+					<span class="cmsh-stat-label"><?php echo esc_html__( 'Total Comments', 'comments-shield' ); ?></span>
+				</div>
+				<div class="cmsh-stat-box">
+					<span class="cmsh-stat-number"><?php echo esc_html( number_format_i18n( $total_comments->spam ) ); ?></span>
+					<span class="cmsh-stat-label"><?php echo esc_html__( 'Spam Comments', 'comments-shield' ); ?></span>
+				</div>
+				<div class="cmsh-stat-box">
+					<span class="cmsh-stat-number"><?php echo esc_html( number_format_i18n( $total_comments->trash ) ); ?></span>
+					<span class="cmsh-stat-label"><?php echo esc_html__( 'Trashed Comments', 'comments-shield' ); ?></span>
+				</div>
+			</div>
+
 			<div class="cmsh-delete-comments-section">
 				<p class="description"><?php echo esc_html__( 'This action will permanently delete all comments from your WordPress site. This cannot be undone.', 'comments-shield' ); ?></p>
 				<form method="post" onsubmit="return confirm('<?php echo esc_js( __( 'Are you sure you want to delete all comments? This action cannot be undone.', 'comments-shield' ) ); ?>');">
