@@ -72,9 +72,14 @@ class CMSH_Core {
 		global $wpdb;
 
 		// Get all comments except WooCommerce product reviews and notes
-		$comments = $wpdb->get_results( 
-			"SELECT * FROM $wpdb->comments WHERE comment_type NOT IN ('review', 'order_note', 'webhook_delivery')"
+		$args = array(
+			'type__not_in' => array('review', 'order_note', 'webhook_delivery'),
+			'status'       => array('approve', 'spam', 'trash'),
+			'fields'       => 'ids',
+			'no_found_rows' => true,
 		);
+		
+		$comments = get_comments($args);
 
 		if ( empty( $comments ) ) {
 			return array(
@@ -86,24 +91,13 @@ class CMSH_Core {
 		// Count comments before deletion
 		$comments_count = count($comments);
 
-		// Delete all comments except WooCommerce related ones
-		$result = $wpdb->query( 
-			"DELETE FROM $wpdb->comments WHERE comment_type NOT IN ('review', 'order_note', 'webhook_delivery')"
-		);
-		
-		// Delete comment meta for deleted comments only
-		$wpdb->query( 
-			"DELETE cm FROM $wpdb->commentmeta cm
-			LEFT JOIN $wpdb->comments c ON cm.comment_id = c.comment_ID
-			WHERE c.comment_ID IS NULL"
-		);
-
-		if ( false === $result ) {
-			return array(
-				'success' => false,
-				'message' => __( 'Failed to delete comments.', 'comments-shield' ),
-			);
+		// Delete comments and their meta
+		foreach ( $comments as $comment_id ) {
+			wp_delete_comment( $comment_id, true );
 		}
+
+		// Clear comment cache
+		wp_cache_delete( 'comments-0', 'counts' );
 
 		return array(
 			'success' => true,

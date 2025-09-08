@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 require_once ABSPATH . 'wp-includes/functions.php';
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
 require_once ABSPATH . 'wp-admin/includes/template.php';
+require_once ABSPATH . 'wp-includes/formatting.php';
 
 class CMSH_Admin {
 	/** @var array List of setting fields => labels */
@@ -205,7 +206,7 @@ class CMSH_Admin {
 			return;
 		}
 
-		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'cmsh_delete_comments' ) ) {
+		if ( ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'cmsh_delete_comments' ) ) {
 			add_settings_error(
 				'comments-shield',
 				'cmsh_nonce_error',
