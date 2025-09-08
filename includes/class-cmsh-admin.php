@@ -1,8 +1,9 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-// Ensure WordPress admin functions are available
+require_once ABSPATH . 'wp-includes/functions.php';
 require_once ABSPATH . 'wp-admin/includes/plugin.php';
+require_once ABSPATH . 'wp-admin/includes/template.php';
 
 class CMSH_Admin {
 	/** @var array List of setting fields => labels */
@@ -77,9 +78,19 @@ class CMSH_Admin {
 
 	public function render_delete_page(): void {
 		$total_comments = wp_count_comments();
+		$result = get_option('cmsh_delete_message');
+		if ($result) {
+			delete_option('cmsh_delete_message');
+			if ($result['success']) {
+				add_settings_error('comments-shield', 'delete-success', $result['message'], 'success');
+			} else {
+				add_settings_error('comments-shield', 'delete-error', $result['message'], 'error');
+			}
+		}
 		?>
 		<div class="wrap">
 			<h1><?php echo esc_html__( 'Delete Comments', 'comments-shield' ); ?></h1>
+			<?php settings_errors('comments-shield'); ?>
 			
 			<div class="cmsh-stats-grid">
 				<div class="cmsh-stat-box">
@@ -97,8 +108,8 @@ class CMSH_Admin {
 			</div>
 
 			<div class="cmsh-delete-comments-section">
-				<p class="description"><?php echo esc_html__( 'This action will permanently delete all comments from your WordPress site. This cannot be undone.', 'comments-shield' ); ?></p>
-				<form method="post" onsubmit="return confirm('<?php echo esc_js( __( 'Are you sure you want to delete all comments? This action cannot be undone.', 'comments-shield' ) ); ?>');">
+				<p class="description"><?php echo esc_html__( 'This action will permanently delete all standard comments from your WordPress site (WooCommerce reviews and notes will be preserved). This cannot be undone.', 'comments-shield' ); ?></p>
+				<form method="post" onsubmit="return confirm('<?php echo esc_js( __( 'Are you sure you want to delete all comments? WooCommerce reviews and notes will be preserved.', 'comments-shield' ) ); ?>');">
 					<?php wp_nonce_field( 'cmsh_delete_comments' ); ?>
 					<input type="submit" name="cmsh_delete_comments" class="button button-danger" value="<?php echo esc_attr__( 'Delete All Comments', 'comments-shield' ); ?>" />
 				</form>
@@ -217,20 +228,11 @@ class CMSH_Admin {
 		$core = new CMSH_Core();
 		$result = $core->delete_all_comments();
 
-		if ( $result['success'] ) {
-			add_settings_error(
-				'comments-shield',
-				'cmsh_delete_success',
-				$result['message'],
-				'success'
-			);
-		} else {
-			add_settings_error(
-				'comments-shield',
-				'cmsh_delete_error',
-				$result['message'],
-				'error'
-			);
-		}
+		// Store the message in wp_options temporarily
+		update_option('cmsh_delete_message', $result, false);
+		
+		// Redirect back to the delete page to show the message
+		wp_redirect(admin_url('admin.php?page=comments-shield-delete'));
+		exit;
 	}
 }

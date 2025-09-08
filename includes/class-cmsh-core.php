@@ -69,34 +69,48 @@ class CMSH_Core {
 	 * @return array Response with status and message
 	 */
 	public function delete_all_comments(): array {
-		if ( ! current_user_can( 'manage_options' ) ) {
+		global $wpdb;
+
+		// Get all comments except WooCommerce product reviews and notes
+		$comments = $wpdb->get_results( 
+			"SELECT * FROM $wpdb->comments WHERE comment_type NOT IN ('review', 'order_note', 'webhook_delivery')"
+		);
+
+		if ( empty( $comments ) ) {
 			return array(
 				'success' => false,
-				'message' => __( 'You do not have permission to perform this action.', 'comments-shield' )
+				'message' => __( 'No comments found to delete.', 'comments-shield' ),
 			);
 		}
 
-		global $wpdb;
+		// Count comments before deletion
+		$comments_count = count($comments);
+
+		// Delete all comments except WooCommerce related ones
+		$result = $wpdb->query( 
+			"DELETE FROM $wpdb->comments WHERE comment_type NOT IN ('review', 'order_note', 'webhook_delivery')"
+		);
 		
-		// Delete all comments
-		$comments_deleted = $wpdb->query( "TRUNCATE TABLE {$wpdb->comments}" );
-		$meta_deleted = $wpdb->query( "TRUNCATE TABLE {$wpdb->commentmeta}" );
-		
-		if ( $comments_deleted !== false && $meta_deleted !== false ) {
-			// Update comment count for all posts
-			$wpdb->query( "UPDATE {$wpdb->posts} SET comment_count = 0" );
-			
-			wp_cache_flush();
-			
+		// Delete comment meta for deleted comments only
+		$wpdb->query( 
+			"DELETE cm FROM $wpdb->commentmeta cm
+			LEFT JOIN $wpdb->comments c ON cm.comment_id = c.comment_ID
+			WHERE c.comment_ID IS NULL"
+		);
+
+		if ( false === $result ) {
 			return array(
-				'success' => true,
-				'message' => __( 'All comments have been deleted successfully.', 'comments-shield' )
+				'success' => false,
+				'message' => __( 'Failed to delete comments.', 'comments-shield' ),
 			);
 		}
-		
+
 		return array(
-			'success' => false,
-			'message' => __( 'An error occurred while deleting comments.', 'comments-shield' )
+			'success' => true,
+			'message' => sprintf(
+				__( '%d comments have been permanently deleted (excluding WooCommerce reviews and notes).', 'comments-shield' ),
+				$comments_count
+			),
 		);
 	}
 }
