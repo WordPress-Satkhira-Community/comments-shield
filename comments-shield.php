@@ -19,6 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once ABSPATH . 'wp-includes/pluggable.php';
+require_once ABSPATH . 'wp-admin/includes/admin.php';
+
 // Constants.
 if ( ! defined( 'CMSH_VERSION' ) ) {
 	define( 'CMSH_VERSION', '1.1.1' );
@@ -33,11 +36,6 @@ if ( ! defined( 'CMSH_URL' ) ) {
 	define( 'CMSH_URL', plugin_dir_url( __FILE__ ) );
 }
 
-// Includes.
-require_once CMSH_DIR . 'includes/helpers.php';
-require_once CMSH_DIR . 'includes/class-cmsh-admin.php';
-require_once CMSH_DIR . 'includes/class-cmsh-core.php';
-
 // Activation: seed defaults if option doesn't exist.
 register_activation_hook( __FILE__, 'cmsh_activate' );
 function cmsh_activate() {
@@ -49,17 +47,22 @@ function cmsh_activate() {
 // Redirect to settings after activation (single site).
 add_action( 'activated_plugin', function ( $plugin ) {
 	if ( $plugin === plugin_basename( CMSH_FILE ) ) {
-		wp_safe_redirect( admin_url( 'options-general.php?page=comments-shield' ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=comments-shield' ) );
 		exit;
 	}
 } );
 
-// Bootstrap.
-add_action( 'init', function () {
-	// Instantiate admin (settings UI) only in admin.
-	if ( is_admin() ) {
-		new CMSH_Admin();
-	}
-	// Always instantiate core to enforce rules on front/back end.
-	new CMSH_Core();
-} );
+add_action( 'admin_menu', 'cmsh_load_admin' );
+add_action( 'init', 'cmsh_load_core' );
+
+function cmsh_load_admin() {
+    require_once CMSH_DIR . 'includes/helpers.php';
+    require_once CMSH_DIR . 'includes/class-cmsh-admin.php';
+    new CMSH_Admin();
+}
+
+function cmsh_load_core() {
+    require_once CMSH_DIR . 'includes/helpers.php';
+    require_once CMSH_DIR . 'includes/class-cmsh-core.php';
+    new CMSH_Core();
+}

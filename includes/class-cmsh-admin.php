@@ -1,6 +1,9 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
+// Ensure WordPress admin functions are available
+require_once ABSPATH . 'wp-admin/includes/plugin.php';
+
 class CMSH_Admin {
 	/** @var array List of setting fields => labels */
 	private array $fields;
@@ -14,27 +17,81 @@ class CMSH_Admin {
 			'cmsh_remove_dashboard_widget'  => __( 'Remove Dashboard Widget', 'comments-shield' ),
 		);
 
-		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+		$this->add_admin_menu();
 		add_action( 'admin_init', array( $this, 'settings_init' ) );
 		add_action( 'admin_init', array( $this, 'handle_delete_comments' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( CMSH_FILE ), array( $this, 'add_action_links' ) );
 	}
 
+	public function add_admin_menu() {
+		add_menu_page(
+			__( 'Comments Shield', 'comments-shield' ),
+			__( 'Comments Shield', 'comments-shield' ),
+			'manage_options',
+			'comments-shield',
+			array( $this, 'render_disable_page' ),
+			'dashicons-shield',
+			26
+		);
+
+		add_submenu_page(
+			'comments-shield',
+			__( 'Disable Comments', 'comments-shield' ),
+			__( 'Disable Comments', 'comments-shield' ),
+			'manage_options',
+			'comments-shield',
+			array( $this, 'render_disable_page' )
+		);
+
+		add_submenu_page(
+			'comments-shield',
+			__( 'Delete Comments', 'comments-shield' ),
+			__( 'Delete Comments', 'comments-shield' ),
+			'manage_options',
+			'comments-shield-delete',
+			array( $this, 'render_delete_page' )
+		);
+	}
+
 	public function enqueue_assets( $hook ): void {
-		if ( 'settings_page_comments-shield' === $hook ) {
+		if ( strpos($hook, 'comments-shield') !== false ) {
 			wp_enqueue_style( 'cmsh-admin', CMSH_URL . 'assets/css/admin.css', array(), CMSH_VERSION );
 		}
 	}
 
-	public function add_admin_menu(): void {
-		add_options_page(
-			__( 'Comments Shield Settings', 'comments-shield' ),
-			__( 'Comments Shield', 'comments-shield' ),
-			'manage_options',
-			'comments-shield',
-			array( $this, 'options_page' )
-		);
+	public function render_disable_page(): void {
+		?>
+		<div class="wrap">
+			<h1><?php echo esc_html__( 'Disable Comments', 'comments-shield' ); ?></h1>
+			<form action="options.php" method="post">
+				<?php
+				settings_fields( 'commentShield' );
+				do_settings_sections( 'commentShield' );
+				submit_button();
+				?>
+			</form>
+		</div>
+		<?php
+	}
+
+	public function render_delete_page(): void {
+		?>
+		<div class="wrap">
+			<h1><?php echo esc_html__( 'Delete Comments', 'comments-shield' ); ?></h1>
+			<div class="cmsh-delete-comments-section">
+				<p class="description"><?php echo esc_html__( 'This action will permanently delete all comments from your WordPress site. This cannot be undone.', 'comments-shield' ); ?></p>
+				<form method="post" onsubmit="return confirm('<?php echo esc_js( __( 'Are you sure you want to delete all comments? This action cannot be undone.', 'comments-shield' ) ); ?>');">
+					<?php wp_nonce_field( 'cmsh_delete_comments' ); ?>
+					<input type="submit" name="cmsh_delete_comments" class="button button-danger" value="<?php echo esc_attr__( 'Delete All Comments', 'comments-shield' ); ?>" />
+				</form>
+			</div>
+		</div>
+		<?php
+	}
+
+	public function render_settings_page(): void {
+		$this->options_page();
 	}
 
 	public function settings_init(): void {
@@ -108,7 +165,7 @@ class CMSH_Admin {
 	}
 
 	public function add_action_links( array $actions ): array {
-		$actions[] = '<a href="' . esc_url( admin_url( 'options-general.php?page=comments-shield' ) ) . '">' . esc_html__( 'Settings', 'comments-shield' ) . '</a>';
+		$actions[] = '<a href="' . esc_url( admin_url( 'admin.php?page=comments-shield' ) ) . '">' . esc_html__( 'Settings', 'comments-shield' ) . '</a>';
 		return $actions;
 	}
 
