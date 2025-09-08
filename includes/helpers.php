@@ -6,11 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
  */
 function cmsh_default_settings(): array {
 	return array(
-		'cmsh_disable_comments_support' => 0,
-		'cmsh_close_comments'           => 0,
-		'cmsh_hide_existing_comments'   => 0,
-		'cmsh_remove_comments_menu'     => 0,
-		'cmsh_remove_dashboard_widget'  => 0,
+		'cmsh_disable_comments_support' => 1,
+		'cmsh_close_comments'           => 1,
+		'cmsh_hide_existing_comments'   => 1,
+		'cmsh_remove_comments_menu'     => 1,
+		'cmsh_remove_dashboard_widget'  => 1,
 	);
 }
 
