@@ -9,7 +9,7 @@ function cmsh_default_settings(): array {
 		'cmsh_disable_comments_support' => 1,
 		'cmsh_close_comments'           => 1,
 		'cmsh_hide_existing_comments'   => 1,
-		'cmsh_remove_comments_menu'     => 1,
+		'cmsh_remove_comments_menu'     => 0,
 		'cmsh_remove_dashboard_widget'  => 1,
 	);
 }
