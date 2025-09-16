@@ -1,11 +1,11 @@
-=== Comments Shield - Disable Comments & Stop Spam ===
+=== Comments Shield - Disable Comments & Stop Spam, Bulk Delete & Remove Comments ===
 Author URI: https://www.wpsatkhira.com
 Plugin URI: https://wordpress.org/plugins/comments-shield/
 Donate link: https://www.wpsatkhira.com/donate 
-Contributors: wpdelower, monarchwp23, zakir021063008,wpsatkhira
+Contributors: monarchwp23, wpdelower, zakir021063008,wpsatkhira
 Tags: disable comments, comments shield, remove comments, comments, spam comments
 Tested up to: 6.8
-Stable tag: 1.2
+Stable tag: 1.2.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,25 +19,18 @@ Comments Shield is a powerful yet user-friendly WordPress plugin designed to giv
 ### Video Tutorial
 [youtube https://youtu.be/L36Z7n_dk1w]
 
-== Key Features: ==
+= 🎯 Key Features =
 
-**Effortless Comments Control:** With "Comments Shield," you can easily enable or disable comments on your WordPress site. The plugin provides a straightforward toggle switch, allowing you to make quick adjustments as needed.
+* Disable comments globally
+* Disable comments site-wide
+* One-click comment deletion
+* Delete all types of comments: Approved, Spam, Trash
+* Clean, user-friendly interface with confirmation alerts 
+* Unlimited deletion
+* Friendly admin interface 
+* No personal data collected 
+* Priority support 
 
-**Enhanced Website Security:** By disabling comments when they're not needed, you can significantly reduce the potential attack surface for malicious actors. This helps safeguard your website against various comment-related security threats.
-
-**Improved Performance:** When comments are disabled, it can lead to improved website performance and resource optimization. This is particularly beneficial for sites where comment features are unnecessary.
-
-**User-Friendly Interface:** The plugin's intuitive user interface ensures that even those with limited technical expertise can easily manage comment settings without the need for complex configurations or coding.
-
-**Zero Coding Required:** You don't need to be a coding expert to control comments. The plugin abstracts the technical details, making it accessible to all WordPress users.
-
-**Real-time Changes:** Any changes to comment settings take effect in real-time, ensuring that your site's security can be adjusted promptly to meet your requirements.
-
-**Compatibility:** "Comments Shield" is designed to work seamlessly with various WordPress themes and plugins, ensuring that it won't disrupt your website's core functionality.
-
-**Regular Updates:** The plugin is actively maintained and updated to ensure compatibility with the latest versions of WordPress and to address any potential issues.
-
-**Customer Support:** In case you encounter any difficulties or have questions, the plugin's support team is available to assist you, providing prompt and helpful responses.
 
 == Contributing & Bug Report ==
 Bug reports and pull requests are welcome on [Github](https://github.com/WordPress-Satkhira-Community/comments-shield).
@@ -50,7 +43,10 @@ Comments can pose security risks and lead to spam if not managed properly. Disab
 
 = Is there an admin interface for this plugin? =
 
-Yes. Please go to Settings > Comments Shield
+Yes. Please go to Comments Shield from Admin Menu
+
+= How many comments can I delete with the free version? = 
+The free version allows you to delete all comments without restrictions.
 
 = How do I know if the plugin is working? =
 
@@ -78,7 +74,7 @@ The plugin is actively maintained and updated regularly to ensure compatibility 
 2. Click on the button `Add new`
 3. Search for `Comments Shield` and click 'Install Now' or click on the `upload` link to upload `comments-shield.zip`
 4. Click on `Activate plugin`
-5. Click Settings or go to Settings > Comments Shield
+5. Click Comments Shield from Admin Menu > Disable Comments
 6. Check the box.
 
 == Screenshots ==
@@ -87,6 +83,11 @@ The plugin is actively maintained and updated regularly to ensure compatibility 
 2. An example of a post with comments disabled.
 
 == Changelog ==
+
+= 1.2.1 (September 16,2025) =
+* New: Delete comments feature
+* Security Update
+* New: Interface added
 
 = 1.2 (Aug 17,2025) =
 * Bug Fix
@@ -104,6 +105,11 @@ The plugin is actively maintained and updated regularly to ensure compatibility 
 * Initial Release
 
 == Upgrade Notice ==
+
+= 1.2.1 (September 16,2025) =
+* New: Delete comments feature
+* Security Update
+* New: Interface added
 
 = 1.2 (Aug 17,2025) =
 * Bug Fix

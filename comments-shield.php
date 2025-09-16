@@ -3,7 +3,7 @@
  * Plugin Name: Comments Shield
  * Plugin URI: https://wordpress.org/plugins/comments-shield/
  * Description: Protect your WordPress site from spam comments with simple, safe controls.
- * Version: 1.2
+ * Version: 1.2.1
  * Requires at least: 6.1
  * Requires PHP: 8.0
  * Author: WordPress Satkhira Community
@@ -27,7 +27,7 @@ require_once ABSPATH . 'wp-includes/plugin.php';
 
 // Constants.
 if ( ! defined( 'CMSH_VERSION' ) ) {
-	define( 'CMSH_VERSION', '1.1.1' );
+	define( 'CMSH_VERSION', '1.2.1' );
 }
 if ( ! defined( 'CMSH_FILE' ) ) {
 	define( 'CMSH_FILE', __FILE__ );
