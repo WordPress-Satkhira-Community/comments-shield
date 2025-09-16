@@ -19,8 +19,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Load required WordPress files
+require_once ABSPATH . 'wp-admin/includes/plugin.php';
 require_once ABSPATH . 'wp-includes/pluggable.php';
-require_once ABSPATH . 'wp-admin/includes/admin.php';
+require_once ABSPATH . 'wp-includes/functions.php';
+require_once ABSPATH . 'wp-includes/plugin.php';
 
 // Constants.
 if ( ! defined( 'CMSH_VERSION' ) ) {
@@ -52,17 +55,17 @@ add_action( 'activated_plugin', function ( $plugin ) {
 	}
 } );
 
-add_action( 'admin_menu', 'cmsh_load_admin' );
-add_action( 'init', 'cmsh_load_core' );
+// Load required files
+require_once dirname(__FILE__) . '/includes/helpers.php';
+require_once dirname(__FILE__) . '/includes/class-cmsh-core.php';
+require_once dirname(__FILE__) . '/includes/class-cmsh-admin.php';
 
-function cmsh_load_admin() {
-    require_once CMSH_DIR . 'includes/helpers.php';
-    require_once CMSH_DIR . 'includes/class-cmsh-admin.php';
-    new CMSH_Admin();
-}
-
-function cmsh_load_core() {
-    require_once CMSH_DIR . 'includes/helpers.php';
-    require_once CMSH_DIR . 'includes/class-cmsh-core.php';
+// Initialize plugin components
+function cmsh_init() {
     new CMSH_Core();
+    if (is_admin()) {
+        new CMSH_Admin();
+    }
 }
+
+add_action('plugins_loaded', 'cmsh_init');
