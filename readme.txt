@@ -10,11 +10,11 @@ License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 
-This plugin provides an easy way to manage and disable comments on your WordPress site, enhancing security and performance.
+Delete, disable, and clean all comments in one click. Easily manage, bulk delete, or completely disable comments across your entire WordPress site.
 
 == Description ==
 
-Comments Shield is a powerful yet user-friendly WordPress plugin designed to give website administrators complete control over the commenting functionality of their WordPress site. While comments can be useful for engagement, they can also pose security risks and lead to spam if not properly managed. This plugin simplifies the process of managing comments, enhancing your site's security and performance with ease.
+Comments Shield is a smart, lightweight plugin that gives you complete control over WordPress comments. Want to block unwanted comments site-wide, bulk-remove spam, disable comments on posts or pages, or export comment data? Comments Shield handles it all quickly and easily — powerful protection and cleanup in just a few clicks.
 
 ### Video Tutorial
 [youtube https://youtu.be/L36Z7n_dk1w]
