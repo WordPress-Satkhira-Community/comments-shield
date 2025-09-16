@@ -101,6 +101,7 @@ class CMSH_Core {
 
 		return array(
 			'success' => true,
+			/* translators: %d: Number of comments deleted */
 			'message' => sprintf(
 				__( '%d comments have been permanently deleted (excluding WooCommerce reviews and notes).', 'comments-shield' ),
 				$comments_count
