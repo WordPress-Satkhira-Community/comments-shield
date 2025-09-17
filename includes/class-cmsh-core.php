@@ -71,40 +71,50 @@ class CMSH_Core {
 	public function delete_all_comments(): array {
 		global $wpdb;
 
-		// Get all comments except WooCommerce product reviews and notes
-		$args = array(
-			'type__not_in' => array('review', 'order_note', 'webhook_delivery'),
-			'status'       => array('approve', 'spam', 'trash'),
-			'fields'       => 'ids',
-			'no_found_rows' => true,
+		// First, get count of comments to be deleted (excluding WooCommerce)
+		$count_query = $wpdb->prepare(
+			"SELECT COUNT(comment_ID) FROM {$wpdb->comments} 
+			WHERE comment_type NOT IN ('review', 'order_note', 'webhook_delivery')"
 		);
-		
-		$comments = get_comments($args);
+		$total_comments = $wpdb->get_var($count_query);
 
-		if ( empty( $comments ) ) {
+		if (empty($total_comments)) {
 			return array(
 				'success' => false,
-				'message' => __( 'No comments found to delete.', 'comments-shield' ),
+				'message' => __('No comments found to delete.', 'comments-shield'),
 			);
 		}
 
-		// Count comments before deletion
-		$comments_count = count($comments);
+		// Delete comment meta
+		$wpdb->query(
+			"DELETE cm FROM {$wpdb->commentmeta} cm
+			INNER JOIN {$wpdb->comments} c ON cm.comment_id = c.comment_ID
+			WHERE c.comment_type NOT IN ('review', 'order_note', 'webhook_delivery')"
+		);
 
-		// Delete comments and their meta
-		foreach ( $comments as $comment_id ) {
-			wp_delete_comment( $comment_id, true );
+		// Delete the comments
+		$result = $wpdb->query(
+			"DELETE FROM {$wpdb->comments} 
+			WHERE comment_type NOT IN ('review', 'order_note', 'webhook_delivery')"
+		);
+
+		// Clear comments cache
+		wp_cache_delete('comments-0', 'counts');
+		clean_comment_cache($wpdb->insert_id);
+
+		if ($result === false) {
+			return array(
+				'success' => false,
+				'message' => __('An error occurred while deleting comments.', 'comments-shield'),
+			);
 		}
-
-		// Clear comment cache
-		wp_cache_delete( 'comments-0', 'counts' );
 
 		return array(
 			'success' => true,
 			/* translators: %d: Number of comments deleted */
 			'message' => sprintf(
-				__( '%d comments have been permanently deleted (excluding WooCommerce reviews and notes).', 'comments-shield' ),
-				$comments_count
+				__('%d comments have been permanently deleted (excluding WooCommerce reviews and notes).', 'comments-shield'),
+				$total_comments
 			),
 		);
 	}
