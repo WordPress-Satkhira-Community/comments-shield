@@ -11,6 +11,7 @@ function cmsh_default_settings(): array {
 		'cmsh_hide_existing_comments'   => 1,
 		'cmsh_remove_comments_menu'     => 0,
 		'cmsh_remove_dashboard_widget'  => 1,
+		'cmsh_move_shield_to_settings'  => 0,
 	);
 }
 
@@ -46,4 +47,27 @@ function cmsh_get_settings(): array {
 		$merged[ $k ] = $v ? 1 : 0;
 	}
 	return $merged;
+}
+
+/**
+ * Whether the plugin pages are relocated under Settings / Tools.
+ */
+function cmsh_is_moved_to_settings(): bool {
+	$options = cmsh_get_settings();
+	return ! empty( $options['cmsh_move_shield_to_settings'] );
+}
+
+/**
+ * Build the admin URL for a plugin page, honouring the relocation setting.
+ *
+ * @param string $page Page slug: 'comments-shield' or 'comments-shield-delete'.
+ * @return string      Absolute admin URL.
+ */
+function cmsh_admin_page_url( string $page = 'comments-shield' ): string {
+	if ( cmsh_is_moved_to_settings() ) {
+		$parent = ( 'comments-shield-delete' === $page ) ? 'tools.php' : 'options-general.php';
+	} else {
+		$parent = 'admin.php';
+	}
+	return admin_url( $parent . '?page=' . $page );
 }

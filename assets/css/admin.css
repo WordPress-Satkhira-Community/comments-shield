@@ -60,6 +60,17 @@
   border-color: #c92626 !important;
 }
 
+.button-danger:focus {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 3px #c92626 !important;
+}
+
+/* Anchors rendered as danger buttons */
+a.button-danger,
+a.button-danger:hover,
+a.button-danger:focus {
+  text-decoration: none;
+}
+
 /* Stats boxes styles */
 .cmsh-stats-grid {
     display: grid;

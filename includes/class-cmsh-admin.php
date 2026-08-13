@@ -17,16 +17,38 @@ class CMSH_Admin {
 			'cmsh_hide_existing_comments'   => __( 'Hide Existing Comments', 'comments-shield' ),
 			'cmsh_remove_comments_menu'     => __( 'Remove Comments Menu', 'comments-shield' ),
 			'cmsh_remove_dashboard_widget'  => __( 'Remove Dashboard Widget', 'comments-shield' ),
+			'cmsh_move_shield_to_settings'  => __( 'Move "Comments Shield" Menu under Settings Page', 'comments-shield' ),
 		);
 
-		$this->add_admin_menu();
+		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
 		add_action( 'admin_init', array( $this, 'settings_init' ) );
 		add_action( 'admin_init', array( $this, 'handle_delete_comments' ) );
+		add_action( 'admin_init', array( $this, 'maybe_fix_save_redirect' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( CMSH_FILE ), array( $this, 'add_action_links' ) );
 	}
 
 	public function add_admin_menu() {
+		if ( cmsh_is_moved_to_settings() ) {
+			add_options_page(
+				__( 'Comments Shield', 'comments-shield' ),
+				__( 'Comments Shield', 'comments-shield' ),
+				'manage_options',
+				'comments-shield',
+				array( $this, 'render_disable_page' )
+			);
+
+			add_management_page(
+				__( 'Delete Comments', 'comments-shield' ),
+				__( 'Delete Comments', 'comments-shield' ),
+				'manage_options',
+				'comments-shield-delete',
+				array( $this, 'render_delete_page' )
+			);
+
+			return;
+		}
+
 		add_menu_page(
 			__( 'Comments Shield', 'comments-shield' ),
 			__( 'Comments Shield', 'comments-shield' ),
@@ -73,6 +95,12 @@ class CMSH_Admin {
 				submit_button();
 				?>
 			</form>
+
+			<p>
+				<a href="<?php echo esc_url( cmsh_admin_page_url( 'comments-shield-delete' ) ); ?>" class="button button-danger">
+					<?php echo esc_html__( 'Delete Comments', 'comments-shield' ); ?>
+				</a>
+			</p>
 		</div>
 		<?php
 	}
@@ -194,8 +222,42 @@ class CMSH_Admin {
 	}
 
 	public function add_action_links( array $actions ): array {
-		$actions[] = '<a href="' . esc_url( admin_url( 'admin.php?page=comments-shield' ) ) . '">' . esc_html__( 'Settings', 'comments-shield' ) . '</a>';
+		$actions[] = '<a href="' . esc_url( cmsh_admin_page_url( 'comments-shield' ) ) . '">' . esc_html__( 'Settings', 'comments-shield' ) . '</a>';
 		return $actions;
+	}
+
+	/**
+	 * The settings form posts to options.php, which sends the user back to the
+	 * referring URL. Toggling the relocation setting changes that URL, so the
+	 * old one would 404. Rewrite the redirect when our settings group is saved.
+	 */
+	public function maybe_fix_save_redirect(): void {
+		global $pagenow;
+
+		if ( 'options.php' !== $pagenow ) {
+			return;
+		}
+
+		// Routing only; options.php performs its own nonce/capability checks.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$option_page = isset( $_POST['option_page'] ) ? sanitize_text_field( wp_unslash( $_POST['option_page'] ) ) : '';
+		if ( 'commentShield' !== $option_page ) {
+			return;
+		}
+
+		add_filter( 'wp_redirect', array( $this, 'filter_save_redirect' ) );
+	}
+
+	/**
+	 * @param string $location Redirect target chosen by options.php.
+	 * @return string          Target pointing at the plugin's current location.
+	 */
+	public function filter_save_redirect( $location ) {
+		if ( ! is_string( $location ) || false === strpos( $location, 'page=comments-shield' ) ) {
+			return $location;
+		}
+
+		return add_query_arg( 'settings-updated', 'true', cmsh_admin_page_url( 'comments-shield' ) );
 	}
 
 	/**
@@ -233,7 +295,7 @@ class CMSH_Admin {
 		update_option('cmsh_delete_message', $result, false);
 		
 		// Redirect back to the delete page to show the message
-		wp_redirect(admin_url('admin.php?page=comments-shield-delete'));
+		wp_safe_redirect( cmsh_admin_page_url( 'comments-shield-delete' ) );
 		exit;
 	}
 }

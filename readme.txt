@@ -4,8 +4,8 @@ Plugin URI: https://wordpress.org/plugins/comments-shield/
 Donate link: https://www.wpsatkhira.com/donate 
 Contributors: monarchwp23, wpdelower, zakir021063008,wpsatkhira
 Tags: disable comments, comments shield, remove comments, delete comments, spam comments
-Tested up to: 6.8
-Stable tag: 1.2.1
+Tested up to: 7.0.4
+Stable tag: 1.3.0
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -83,6 +83,11 @@ The plugin is actively maintained and updated regularly to ensure compatibility 
 2. An example of a post with comments disabled.
 
 == Changelog ==
+
+= 1.3.0 (August 13,2026) =
+* New: move top level menu to submenu
+* Security Update
+* WordPress 7.0.4 compatibility
 
 = 1.2.1 (September 16,2025) =
 * New: Delete comments feature
