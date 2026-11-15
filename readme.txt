@@ -1,132 +1,50 @@
-=== Comments Shield - Disable Comments & Stop Spam, Bulk Delete & Remove Comments ===
-Author URI: https://www.wpsatkhira.com
-Plugin URI: https://wordpress.org/plugins/comments-shield/
-Donate link: https://www.wpsatkhira.com/donate 
-Contributors: monarchwp23, wpdelower, zakir021063008,wpsatkhira
-Tags: disable comments, comments shield, remove comments, delete comments, spam comments
-Tested up to: 7.0.4
-Stable tag: 1.3.0
+=== Comments Shield - Disable and Remove Comment Spam ===
+Contributors: monarchwp23, wpdelower, zakir021063008, wpsatkhira
+Tags: comments, spam, disable comments, delete comments, cleanup
+Requires at least: 6.1
+Tested up to: 6.8
+Stable tag: 1.3.1
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-
-Delete, disable, and clean all comments in one click. Easily manage, bulk delete, or completely disable comments across your entire WordPress site.
+Comments Shield lets you disable comment support on your site, hide existing comments, and permanently remove comment records while keeping WooCommerce review notes intact.
 
 == Description ==
 
-Comments Shield is a smart, lightweight plugin that gives you complete control over WordPress comments. Want to block unwanted comments site-wide, bulk-remove spam, disable comments on posts or pages, or export comment data? Comments Shield handles it all quickly and easily — powerful protection and cleanup in just a few clicks.
+Comments Shield is a lightweight plugin for responsibly shutting down WordPress comments when they are no longer needed.
 
-### Video Tutorial
-[youtube https://youtu.be/L36Z7n_dk1w]
+It includes:
 
-= 🎯 Key Features =
+* disable comment support across post types
+* close comment forms on the front end
+* hide existing comments from visitors
+* remove the Comments admin menu and dashboard widget
+* delete all standard comments in a single action while preserving WooCommerce review records
 
-* Disable comments globally
-* Disable comments site-wide
-* One-click comment deletion
-* Delete all types of comments: Approved, Spam, Trash
-* Clean, user-friendly interface with confirmation alerts 
-* Unlimited deletion
-* Friendly admin interface 
-* No personal data collected 
-* Priority support 
-
-
-== Contributing & Bug Report ==
-Bug reports and pull requests are welcome on [Github](https://github.com/WordPress-Satkhira-Community/comments-shield).
-
-== Frequently Asked Questions ==
-
-= Why should I consider disabling comments? =
-
-Comments can pose security risks and lead to spam if not managed properly. Disabling them when not needed can enhance your site's security.
-
-= Is there an admin interface for this plugin? =
-
-Yes. Please go to Comments Shield from Admin Menu
-
-= How many comments can I delete with the free version? = 
-The free version allows you to delete all comments without restrictions.
-
-= How do I know if the plugin is working? =
-
-You can check the comments section on your posts/pages. If comments are disabled, the comment form will not be displayed.
-
-= Does disabling comments improve website performance? =
-
-Yes, when comments are disabled, it can lead to improved website performance and resource optimization, especially for sites where comment features are unnecessary.
-
-= Is the Comments Shield plugin compatible with other WordPress themes and plugins? =
-
-Yes, the Comments Shield plugin is designed to work seamlessly with various WordPress themes and plugins. It is regularly updated to ensure compatibility with the latest versions of WordPress and to address any potential issues.
-
-= Is there customer support available for Comments Shield? =
-
-Yes, in case you encounter any difficulties or have questions, the plugin's support team is available to assist you and provide prompt and helpful responses.
-
-= How frequently is the "Comments Shield" plugin updated? =
-
-The plugin is actively maintained and updated regularly to ensure compatibility with the latest versions of WordPress and to address any potential issues.
+The plugin is intentionally lean: no remote assets, no telemetry, and no bundled tracking scripts.
 
 == Installation ==
 
-1. Go to `Plugins` in the Admin menu
-2. Click on the button `Add new`
-3. Search for `Comments Shield` and click 'Install Now' or click on the `upload` link to upload `comments-shield.zip`
-4. Click on `Activate plugin`
-5. Click Comments Shield from Admin Menu > Disable Comments
-6. Check the box.
+1. Upload the plugin to the `/wp-content/plugins/` directory.
+2. Activate the plugin through the 'Plugins' screen in WordPress.
+3. Go to Comments Shield in the admin menu and choose the settings you want.
+4. Use the Delete Comments screen to remove existing comment records.
 
-== Screenshots ==
+== Frequently Asked Questions ==
 
-1. An example of the settings page for Comments Shield.
-2. An example of a post with comments disabled.
+= Does the plugin remove existing comments from the database? =
+
+Yes. The Delete Comments screen can permanently remove standard comments from the database while preserving WooCommerce reviews and notes.
+
+= Can I leave the admin menu in place? =
+
+Yes. The settings page can stay in the main menu or be moved under Settings depending on your preference.
+
+= Does this plugin collect data? =
+
+No. Comments Shield does not send usage or visitor data to any external service.
 
 == Changelog ==
 
-= 1.3.0 (August 13,2026) =
-* New: move top level menu to submenu
-* Security Update
-* WordPress 7.0.4 compatibility
-
-= 1.2.1 (September 16,2025) =
-* New: Delete comments feature
-* Security Update
-* New: Interface added
-
-= 1.2 (Aug 17,2025) =
-* Bug Fix
-* Security Update
-* Plugin Compatibility fixed
-* Redesigned checkboxes
-* New Interface added
-
-= 1.0.1 (January 14,2025) =
-* Bug Fix
-* Security Update
-* Plugin Compatibility fixed
-
-= 1.0 (January 10,2025) =
-* Initial Release
-
-== Upgrade Notice ==
-
-= 1.2.1 (September 16,2025) =
-* New: Delete comments feature
-* Security Update
-* New: Interface added
-
-= 1.2 (Aug 17,2025) =
-* Bug Fix
-* Security Update
-* Plugin Compatibility fixed
-* Redesigned checkboxes
-* New Interface added
-
-= 1.0.1 (January 14,2025) =
-* Bug Fix
-* Security Update
-* Plugin Compatibility fixed
-
-= 1.0 (January 10,2025) =
-* Initial Release
+= 1.3.1 (2026-11-15) =
+* Stabilise the release: fix the version mismatch, remove unsafe WordPress core requires, harden the activation redirect, repair the delete routine, switch to per-user transient notices, add uninstall cleanup, add the language catalog, and bring the packaging and CI checks in line with release requirements.

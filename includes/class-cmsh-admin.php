@@ -1,11 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-require_once ABSPATH . 'wp-includes/functions.php';
-require_once ABSPATH . 'wp-admin/includes/plugin.php';
-require_once ABSPATH . 'wp-admin/includes/template.php';
-require_once ABSPATH . 'wp-includes/formatting.php';
-
 class CMSH_Admin {
 	/** @var array List of setting fields => labels */
 	private array $fields;
@@ -107,13 +102,14 @@ class CMSH_Admin {
 
 	public function render_delete_page(): void {
 		$total_comments = wp_count_comments();
-		$result = get_option('cmsh_delete_message');
-		if ($result) {
-			delete_option('cmsh_delete_message');
-			if ($result['success']) {
-				add_settings_error('comments-shield', 'delete-success', $result['message'], 'success');
+		$user_id        = get_current_user_id();
+		$result         = get_transient( 'cmsh_delete_message_' . $user_id );
+		if ( false !== $result ) {
+			delete_transient( 'cmsh_delete_message_' . $user_id );
+			if ( ! empty( $result['success'] ) ) {
+				add_settings_error( 'comments-shield', 'delete-success', $result['message'], 'success' );
 			} else {
-				add_settings_error('comments-shield', 'delete-error', $result['message'], 'error');
+				add_settings_error( 'comments-shield', 'delete-error', $result['message'], 'error' );
 			}
 		}
 		?>
@@ -145,10 +141,6 @@ class CMSH_Admin {
 			</div>
 		</div>
 		<?php
-	}
-
-	public function render_settings_page(): void {
-		$this->options_page();
 	}
 
 	public function settings_init(): void {
@@ -193,30 +185,6 @@ class CMSH_Admin {
 				<input id="<?php echo esc_attr( $input_id ); ?>" type="checkbox" name="cmsh_settings[<?php echo esc_attr( $id ); ?>]" value="1" <?php checked( $checked ); ?> />
 				<span class="cmsh-slider round" aria-hidden="true"></span>
 			</label>
-		</div>
-		<?php
-	}
-
-	public function options_page(): void {
-		?>
-		<div class="wrap">
-			<h1><?php echo esc_html__( 'Comments Shield', 'comments-shield' ); ?></h1>
-			<form action="options.php" method="post">
-				<?php
-				settings_fields( 'commentShield' );
-				do_settings_sections( 'commentShield' );
-				submit_button();
-				?>
-			</form>
-
-			<div class="cmsh-delete-comments-section">
-				<h2><?php echo esc_html__( 'Delete All Comments', 'comments-shield' ); ?></h2>
-				<p class="description"><?php echo esc_html__( 'This action will permanently delete all comments from your WordPress site. This cannot be undone.', 'comments-shield' ); ?></p>
-				<form method="post" onsubmit="return confirm('<?php echo esc_js( __( 'Are you sure you want to delete all comments? This action cannot be undone.', 'comments-shield' ) ); ?>');">
-					<?php wp_nonce_field( 'cmsh_delete_comments' ); ?>
-					<input type="submit" name="cmsh_delete_comments" class="button button-danger" value="<?php echo esc_attr__( 'Delete All Comments', 'comments-shield' ); ?>" />
-				</form>
-			</div>
 		</div>
 		<?php
 	}
@@ -291,10 +259,7 @@ class CMSH_Admin {
 		$core = new CMSH_Core();
 		$result = $core->delete_all_comments();
 
-		// Store the message in wp_options temporarily
-		update_option('cmsh_delete_message', $result, false);
-		
-		// Redirect back to the delete page to show the message
+		set_transient( 'cmsh_delete_message_' . get_current_user_id(), $result, 60 );
 		wp_safe_redirect( cmsh_admin_page_url( 'comments-shield-delete' ) );
 		exit;
 	}

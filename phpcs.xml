@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset name="comments-shield">
+	<description>PHPCS rules for Comments Shield.</description>
+
+	<file>.</file>
+	<exclude-pattern>*/languages/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/.wordpress-org/*</exclude-pattern>
+
+	<rule ref="WordPress"/>
+	<rule ref="WordPress-Docs"/>
+	<config name="minimum_supported_wp_version" value="6.1"/>
+	<config name="testVersion" value="8.0-"/>
+</ruleset>

@@ -47,17 +47,17 @@ Status values: `todo`, `doing`, `review`, `done`, `dropped`.
 
 | ID | Task | Status | PR |
 |---|---|---|---|
-| F-01 | Sync `CMSH_VERSION` with plugin header | todo | |
-| F-02 | Remove manual `require_once` of core files | todo | |
-| F-03 | Safe activation redirect (transient, skip bulk/CLI/network) | todo | |
-| F-04 | Fix delete routine: `prepare()` misuse, cache flush, recount `comment_count` | todo | |
-| F-05 | Delete result notice via per-user transient | todo | |
-| F-06 | Remove dead `render_settings_page()` / `options_page()` | todo | |
-| F-07 | Add `uninstall.php` | todo | |
-| F-08 | Add `/languages` and `.pot` | todo | |
-| F-09 | Make readme match real features | todo | |
-| F-10 | Extend `.distignore` (AGENTS.md, docs/, tests/, tooling) | todo | |
-| F-11 | PHPCS + Plugin Check in CI; pin action versions | todo | |
+| F-01 | Sync `CMSH_VERSION` with plugin header | done | |
+| F-02 | Remove manual `require_once` of core files | done | |
+| F-03 | Safe activation redirect (transient, skip bulk/CLI/network) | done | |
+| F-04 | Fix delete routine: `prepare()` misuse, cache flush, recount `comment_count` | done | |
+| F-05 | Delete result notice via per-user transient | done | |
+| F-06 | Remove dead `render_settings_page()` / `options_page()` | done | |
+| F-07 | Add `uninstall.php` | done | |
+| F-08 | Add `/languages` and `.pot` | done | |
+| F-09 | Make readme match real features | done | |
+| F-10 | Extend `.distignore` (AGENTS.md, docs/, tests/, tooling) | done | |
+| F-11 | PHPCS + Plugin Check in CI; pin action versions | done | |
 
 ### Phase 1 — New interface (v1.4.0)
 
@@ -127,3 +127,4 @@ Newest first. One line per merged change: date, ID, what changed, PR.
 | Date | ID | Change | PR |
 |---|---|---|---|
 | 2026-11-15 | — | Roadmap and tracker created from competitor review (Disable Comments 2.9.1, Disable Comments RB 2.1.0, SG Security UI) | |
+| 2026-11-15 | F-01 to F-11 | Stabilised the 1.3.1 release by fixing versioning, activation flow, delete routine, notices, uninstall cleanup, translations, packaging and CI checks | |

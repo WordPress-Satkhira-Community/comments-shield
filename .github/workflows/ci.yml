@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  phpcs:
+    name: PHPCS
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: phpcs, wp-cli
+
+      - name: Install WordPress Coding Standards
+        run: |
+          composer global config --no-plugins allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer global require --no-interaction --no-progress wp-coding-standards/wpcs
+          phpcs --config-set installed_paths "$(composer global config home --no-interaction --format=json | jq -r '.home')/vendor/wp-coding-standards/wpcs"
+
+      - name: Run PHPCS
+        run: phpcs --standard=phpcs.xml .
+
+  plugin-check:
+    name: Plugin Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PHP and WP-CLI
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: wp-cli
+
+      - name: Install WordPress test site
+        run: |
+          mkdir -p /tmp/wordpress
+          wp core download --version=latest --path=/tmp/wordpress --allow-root
+
+      - name: Run plugin check
+        run: |
+          wp package install wordpress/plugin-check:dev-main --allow-root
+          wp plugin check . --path=/tmp/wordpress --allow-root --format=table

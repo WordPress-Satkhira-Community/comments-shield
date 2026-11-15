@@ -9,4 +9,9 @@ composer.json
 composer.lock
 yarn.lock
 AGENTS.md
-/docs
+docs/
+tests/
+package.json
+package-lock.json
+phpcs.xml
+phpcs.xml.dist

@@ -71,41 +71,63 @@ class CMSH_Core {
 	public function delete_all_comments(): array {
 		global $wpdb;
 
-		// First, get count of comments to be deleted (excluding WooCommerce)
-		$count_query = $wpdb->prepare(
-			"SELECT COUNT(comment_ID) FROM {$wpdb->comments} 
-			WHERE comment_type NOT IN ('review', 'order_note', 'webhook_delivery')"
+		$excluded_types = array( 'review', 'order_note', 'webhook_delivery' );
+		$placeholders    = implode( ', ', array_fill( 0, count( $excluded_types ), '%s' ) );
+		$count_query    = $wpdb->prepare(
+			"SELECT COUNT(*) FROM {$wpdb->comments} WHERE comment_type NOT IN ({$placeholders})",
+			$excluded_types
 		);
-		$total_comments = $wpdb->get_var($count_query);
+		$total_comments = (int) $wpdb->get_var( $count_query );
 
-		if (empty($total_comments)) {
+		if ( 0 === $total_comments ) {
 			return array(
 				'success' => false,
-				'message' => __('No comments found to delete.', 'comments-shield'),
+				'message' => __( 'No comments found to delete.', 'comments-shield' ),
 			);
 		}
 
-		// Delete comment meta
-		$wpdb->query(
-			"DELETE cm FROM {$wpdb->commentmeta} cm
-			INNER JOIN {$wpdb->comments} c ON cm.comment_id = c.comment_ID
-			WHERE c.comment_type NOT IN ('review', 'order_note', 'webhook_delivery')"
+		$post_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT comment_post_ID FROM {$wpdb->comments} WHERE comment_post_ID > 0 AND comment_type NOT IN ({$placeholders})",
+				$excluded_types
+			)
 		);
 
-		// Delete the comments
+		$comment_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT comment_ID FROM {$wpdb->comments} WHERE comment_type NOT IN ({$placeholders})",
+				$excluded_types
+			)
+		);
+
+		if ( ! empty( $comment_ids ) ) {
+			$comment_id_placeholders = implode( ', ', array_fill( 0, count( $comment_ids ), '%d' ) );
+			$meta_query             = $wpdb->prepare(
+				"DELETE cm FROM {$wpdb->commentmeta} cm INNER JOIN {$wpdb->comments} c ON cm.comment_id = c.comment_ID WHERE c.comment_ID IN ({$comment_id_placeholders})",
+				$comment_ids
+			);
+			$wpdb->query( $meta_query );
+		}
+
 		$result = $wpdb->query(
-			"DELETE FROM {$wpdb->comments} 
-			WHERE comment_type NOT IN ('review', 'order_note', 'webhook_delivery')"
+			$wpdb->prepare(
+				"DELETE FROM {$wpdb->comments} WHERE comment_type NOT IN ({$placeholders})",
+				$excluded_types
+			)
 		);
 
-		// Clear comments cache
-		wp_cache_delete('comments-0', 'counts');
-		clean_comment_cache($wpdb->insert_id);
+		wp_cache_delete( 'comments-0', 'counts' );
+		if ( ! empty( $comment_ids ) ) {
+			clean_comment_cache( $comment_ids );
+		}
+		foreach ( $post_ids as $post_id ) {
+			wp_update_comment_count_now( (int) $post_id );
+		}
 
-		if ($result === false) {
+		if ( false === $result ) {
 			return array(
 				'success' => false,
-				'message' => __('An error occurred while deleting comments.', 'comments-shield'),
+				'message' => __( 'An error occurred while deleting comments.', 'comments-shield' ),
 			);
 		}
 
@@ -113,7 +135,7 @@ class CMSH_Core {
 			'success' => true,
 			/* translators: %d: Number of comments deleted */
 			'message' => sprintf(
-				__('%d comments have been permanently deleted (excluding WooCommerce reviews and notes).', 'comments-shield'),
+				__( '%d comments have been permanently deleted (excluding WooCommerce reviews and notes).', 'comments-shield' ),
 				$total_comments
 			),
 		);
